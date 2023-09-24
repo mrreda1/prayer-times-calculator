@@ -14,14 +14,6 @@
 int main (int argc, char *argv[]) {
     double Y, M, D, H, m, s, B, A, Z, T, JD, U, L0, h, TT,
     ET1000, ET, DELTA, SF, LONG, LAT, FAJR_ANGLE, ISHA_ANGLE;
-
-    // Time sync
-    time_t ttime = time(0);
-    tm* current_time = localtime(&ttime);
-    Y = 1900 + current_time->tm_year;
-    M = 1 + current_time->tm_mon;
-    D = current_time->tm_mday;
-
     H = 12, m = 0, s = 0;
     Z = +3, h = 23;
     SF = 1;
@@ -36,6 +28,13 @@ int main (int argc, char *argv[]) {
     }
     A = INT(Y / 100);
     B = 2 + INT(A / 4) - A;
+
+    // Time sync
+    time_t ttime = time(0);
+    tm* current_time = localtime(&ttime);
+    Y = 1900 + current_time->tm_year;
+    M = 1 + current_time->tm_mon;
+    D = current_time->tm_mday;
 
     // Convert date to Julian days
     JD = 1720994.5 + INT(365.25 * Y) + INT(30.6001 * (M + 1))
@@ -87,7 +86,7 @@ int main (int argc, char *argv[]) {
     MAGHRIB = TT + HA_MAGHRIB / 15;
     ISHA    = TT + HA_ISHA / 15;
 
-
+    // Print time table
     printf("FAJR: %0.2d:%0.2d\n", INT(FAJR), INT(FAJR * 60) % 60);
     printf("SUNRISE: %0.2d:%0.2d\n", INT(SUNRISE), INT(SUNRISE * 60) % 60);
     printf("ZUHR: %0.2d:%0.2d\n", INT(ZUHR), INT(ZUHR * 60) % 60);
