@@ -1,9 +1,6 @@
-#include <bits/types/struct_tm.h>
-#include <bits/types/time_t.h>
+#include <iostream>
 #include <cmath>
 #include <ctime>
-#include <iostream>
-#include <ostream>
 
 #define INT(x) ((int) (x))
 #define PI 3.141592653589793238462643383279502884197
