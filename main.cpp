@@ -13,7 +13,6 @@
 int main (int argc, char *argv[]) {
     double Y, M, D, H, m, s, B, A, Z, T, JD, U, L0, h, TT,
     ET1000, ET, DELTA, SF, LONG, LAT, FAJR_ANGLE, ISHA_ANGLE;
-    double pi = 3.141592653589793238462643383279502884197;
     Y = 2023, M = 9, D = 24, H = 12, m = 0, s = 0;
     Z = +3, h = 23;
     SF = 1;
