@@ -10,20 +10,20 @@
 
 int main (int argc, char *argv[]) {
     // Convert date to Julian days
-    double Y, M, D, H, m, s, B, A, Z, T, JD, U, L0, h,
+    double Y, M, D, H, m, s, B, A, Z, T, JD, U, L0, h, TT,
     ET1000, ET, DELTA, SF, LONG, LAT, FAJR_ANGLE, ISHA_ANGLE;
-    Y = 2020;
+    Y = 2023;
     M = 9;
-    D = 6;
+    D = 24;
     H = 12;
     m = 0;
     s = 0;
-    Z = +7;
+    Z = +3;
     SF = 1;
-    LAT = -6.2;
-    LONG = 106.816667;
-    FAJR_ANGLE = 20;
-    ISHA_ANGLE = 18;
+    LAT = 29.8403;
+    LONG = 31.2982;
+    FAJR_ANGLE = 19.5;
+    ISHA_ANGLE = 17.5;
 
     if(INT(M) <= 2) {
         M += 12;
@@ -52,4 +52,7 @@ int main (int argc, char *argv[]) {
 	(320 - 4*U) * COS(3*L0) -
 	212 * SIN(4*L0);
     ET = ET1000 / 1000;
+    
+    // Calculate transit time
+    TT = 12 + Z - (LONG / 15) - (ET / 60);
 }
