@@ -3,13 +3,18 @@
 #include <ctime>
 
 #define INT(x) ((int) (x))
-#define PI 3.141592653589793238462643383279502884197
 #define SIN(x) sin((x) * PI/180)
 #define COS(x) cos((x) * PI/180)
 #define TAN(x) tan((x) * PI/180)
 #define ACOT(x) (atan(1.0/(x))) * 180/PI
 #define ACOS(x) (acos(x)) * 180/PI
 #define ABS(x) ((x < 0)?(-(x)):((x)))
+#define PI 3.141592653589793238462643383279502884197
+
+struct prayers {
+    std::string name;
+    int time;
+};
 
 int main (int argc, char *argv[]) {
     double Y, M, D, H, m, s, B, A, Z, T, JD, U, L0, h, TT,
@@ -78,18 +83,35 @@ int main (int argc, char *argv[]) {
     HA_ISHA = ACOS((SIN(SA_ISHA) - SIN(LAT) * SIN(DELTA)) / (COS(LAT) * COS(DELTA)));
 
     // Calculate prayer times
-    FAJR    = TT - HA_FAJR / 15;
-    SUNRISE = TT - HA_SUNRISE / 15;
-    ZUHR    = TT + (1.0 / 60);
-    ASR     = TT + HA_ASR / 15;
-    MAGHRIB = TT + HA_MAGHRIB / 15;
-    ISHA    = TT + HA_ISHA / 15;
+    FAJR    = (TT - HA_FAJR / 15) * 60;
+    SUNRISE = (TT - HA_SUNRISE / 15) * 60;
+    ZUHR    = (TT + (1.0 / 60)) * 60;
+    ASR     = (TT + HA_ASR / 15) * 60;
+    MAGHRIB = (TT + HA_MAGHRIB / 15) * 60;
+    ISHA    = (TT + HA_ISHA / 15) * 60;
 
-    // Print time table
-    printf("FAJR: %0.2d:%0.2d\n", INT(FAJR), INT(FAJR * 60) % 60);
-    printf("SUNRISE: %0.2d:%0.2d\n", INT(SUNRISE), INT(SUNRISE * 60) % 60);
-    printf("ZUHR: %0.2d:%0.2d\n", INT(ZUHR), INT(ZUHR * 60) % 60);
-    printf("ASR: %0.2d:%0.2d\n", INT(ASR), INT(ASR * 60) % 60);
-    printf("MAGHRIB: %0.2d:%0.2d\n", INT(MAGHRIB), INT(MAGHRIB * 60) % 60);
-    printf("ISHA: %0.2d:%0.2d\n", INT(ISHA), INT(ISHA * 60) % 60);
+    prayers prayer[6] = {{"Fajr", (int)FAJR}, {"Sunrise", (int)SUNRISE},
+			 {"Zuhr", (int)ZUHR}, {"Asr", (int)ASR},
+			 {"Maghrib", (int)MAGHRIB}, {"Isha", (int)ISHA}};
+
+    int time_in_minutes = current_time->tm_min + current_time->tm_hour * 60, remaining, i;
+    std::string prayer_name, command;
+
+    for(i = 0; i < 6; i++) {
+	if(prayer[i].time >= time_in_minutes) {
+	    remaining = prayer[i].time - time_in_minutes;
+	    prayer_name = prayer[i].name;
+	    break;
+	}
+    }
+    if(i == 6) {
+	remaining = prayer[0].time + 24 * 60 - time_in_minutes;
+	prayer_name = prayer[0].name;
+    }
+    command = "notify-send \"It's " + prayer_name + " time.\" -i ~/.config/polybar/mosque.png";
+
+    if(remaining == 0)
+	std::system(command.c_str());
+
+    printf("%0.2d:%0.2d", remaining/60, remaining%60);
 }
