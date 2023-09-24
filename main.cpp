@@ -9,7 +9,6 @@
 #define ACOT(x) acot((x) * PI/180)
 
 int main (int argc, char *argv[]) {
-    // Convert date to Julian days
     double Y, M, D, H, m, s, B, A, Z, T, JD, U, L0, h, TT,
     ET1000, ET, DELTA, SF, LONG, LAT, FAJR_ANGLE, ISHA_ANGLE;
     Y = 2023;
@@ -19,6 +18,7 @@ int main (int argc, char *argv[]) {
     m = 0;
     s = 0;
     Z = +3;
+    h = 8;
     SF = 1;
     LAT = 29.8403;
     LONG = 31.2982;
@@ -31,8 +31,8 @@ int main (int argc, char *argv[]) {
     }
     A = INT(Y / 100);
     B = 2 + INT(A / 4) - A;
-    h = 8;
 
+    // Convert date to Julian days
     JD = 1720994.5 + INT(365.25 * Y) + INT(30.6001 * (M + 1))
         + B + D + (H * 3600 + m * 60 + s) / 86400.0 - Z / 24.0;
 
