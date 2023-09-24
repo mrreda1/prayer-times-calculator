@@ -14,14 +14,8 @@ int main (int argc, char *argv[]) {
     double Y, M, D, H, m, s, B, A, Z, T, JD, U, L0, h, TT,
     ET1000, ET, DELTA, SF, LONG, LAT, FAJR_ANGLE, ISHA_ANGLE;
     double pi = 3.141592653589793238462643383279502884197;
-    Y = 2023;
-    M = 9;
-    D = 24;
-    H = 12;
-    m = 0;
-    s = 0;
-    Z = +3;
-    h = 23;
+    Y = 2023, M = 9, D = 24, H = 12, m = 0, s = 0;
+    Z = +3, h = 23;
     SF = 1;
     LAT = 29.8403;
     LONG = 31.2982;
@@ -80,8 +74,15 @@ int main (int argc, char *argv[]) {
     // Calculate prayer times
     FAJR    = TT - HA_FAJR / 15;
     SUNRISE = TT - HA_SUNRISE / 15;
-    ZUHR    = TT + (1.0 / 30);
+    ZUHR    = TT + (1.0 / 60);
     ASR     = TT + HA_ASR / 15;
     MAGHRIB = TT + HA_MAGHRIB / 15;
     ISHA    = TT + HA_ISHA / 15;
+
+    printf("FAJR: %0.2d:%0.2d\n", INT(FAJR), INT(FAJR * 60) % 60);
+    printf("SUNRISE: %0.2d:%0.2d\n", INT(SUNRISE), INT(SUNRISE * 60) % 60);
+    printf("ZUHR: %0.2d:%0.2d\n", INT(ZUHR), INT(ZUHR * 60) % 60);
+    printf("ASR: %0.2d:%0.2d\n", INT(ASR), INT(ASR * 60) % 60);
+    printf("MAGHRIB: %0.2d:%0.2d\n", INT(MAGHRIB), INT(MAGHRIB * 60) % 60);
+    printf("ISHA: %0.2d:%0.2d\n", INT(ISHA), INT(ISHA * 60) % 60);
 }
