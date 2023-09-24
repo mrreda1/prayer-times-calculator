@@ -1,13 +1,12 @@
 #include <cmath>
 #include <iostream>
+
 #define INT(x) ((int) (x))
 #define PI 3.141592653589793238462643383279502884197
 #define SIN(x) sin((x) * PI/180)
 #define COS(x) cos((x) * PI/180)
 #define TAN(x) tan((x) * PI/180)
 #define ACOT(x) acot((x) * PI/180)
-
-using namespace std;
 
 int main (int argc, char *argv[]) {
     // Convert date to Julian days
