@@ -6,12 +6,14 @@
 #define SIN(x) sin((x) * PI/180)
 #define COS(x) cos((x) * PI/180)
 #define TAN(x) tan((x) * PI/180)
-#define ACOT(x) atan(1/((x) * PI/180))
-#define ABS(x) ((x < 0)?(-x):(x))
+#define ACOT(x) (atan(1.0/(x))) * 180/PI
+#define ACOS(x) (acos(x)) * 180/PI
+#define ABS(x) ((x < 0)?(-(x)):((x)))
 
 int main (int argc, char *argv[]) {
     double Y, M, D, H, m, s, B, A, Z, T, JD, U, L0, h, TT,
     ET1000, ET, DELTA, SF, LONG, LAT, FAJR_ANGLE, ISHA_ANGLE;
+    double pi = 3.141592653589793238462643383279502884197;
     Y = 2023;
     M = 9;
     D = 24;
@@ -57,10 +59,29 @@ int main (int argc, char *argv[]) {
     // Calculate transit time
     TT = 12 + Z - (LONG / 15) - (ET / 60);
 
+    
+    double SA_FAJR, SA_SUNRISE, SA_ASR, SA_MAGHRIB, SA_ISHA,
+	FAJR, SUNRISE, ZUHR, ASR, MAGHRIB, ISHA,
+	HA_FAJR, HA_SUNRISE, HA_ASR, HA_MAGHRIB, HA_ISHA;
+
     // Calculate Sun altitude for each prayer times
-    int SA_FAJR = -(FAJR_ANGLE);
-    int SA_SUNRISE = -0.8333 - (0.0347*std::sqrt(h));
-    int SA_ASR = ACOT(SF + TAN(ABS(DELTA - LAT)));
-    int SA_MAGHRIB = 3;
-    int SA_ISHA = 2;
+    SA_FAJR = -(FAJR_ANGLE);
+    SA_SUNRISE = -0.8333 - (0.0347*std::sqrt(h));
+    SA_ASR = ACOT(SF + TAN(ABS(DELTA - LAT)));
+    SA_MAGHRIB = SA_SUNRISE;
+    SA_ISHA = -(ISHA_ANGLE);
+
+    // Calculate hour angle
+    HA_FAJR = ACOS((SIN(SA_FAJR) - SIN(LAT) * SIN(DELTA)) / (COS(LAT) * COS(DELTA)));
+    HA_SUNRISE = HA_MAGHRIB = ACOS((SIN(SA_SUNRISE) - SIN(LAT) * SIN(DELTA)) / (COS(LAT) * COS(DELTA)));
+    HA_ASR = ACOS((SIN(SA_ASR) - SIN(LAT) * SIN(DELTA)) / (COS(LAT) * COS(DELTA)));
+    HA_ISHA = ACOS((SIN(SA_ISHA) - SIN(LAT) * SIN(DELTA)) / (COS(LAT) * COS(DELTA)));
+
+    // Calculate prayer times
+    FAJR    = TT - HA_FAJR / 15;
+    SUNRISE = TT - HA_SUNRISE / 15;
+    ZUHR    = TT + (1.0 / 30);
+    ASR     = TT + HA_ASR / 15;
+    MAGHRIB = TT + HA_MAGHRIB / 15;
+    ISHA    = TT + HA_ISHA / 15;
 }
