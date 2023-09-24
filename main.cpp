@@ -6,7 +6,8 @@
 #define SIN(x) sin((x) * PI/180)
 #define COS(x) cos((x) * PI/180)
 #define TAN(x) tan((x) * PI/180)
-#define ACOT(x) acot((x) * PI/180)
+#define ACOT(x) atan(1/((x) * PI/180))
+#define ABS(x) ((x < 0)?(-x):(x))
 
 int main (int argc, char *argv[]) {
     double Y, M, D, H, m, s, B, A, Z, T, JD, U, L0, h, TT,
@@ -18,7 +19,7 @@ int main (int argc, char *argv[]) {
     m = 0;
     s = 0;
     Z = +3;
-    h = 8;
+    h = 23;
     SF = 1;
     LAT = 29.8403;
     LONG = 31.2982;
@@ -55,4 +56,11 @@ int main (int argc, char *argv[]) {
     
     // Calculate transit time
     TT = 12 + Z - (LONG / 15) - (ET / 60);
+
+    // Calculate Sun altitude for each prayer times
+    int SA_FAJR = -(FAJR_ANGLE);
+    int SA_SUNRISE = -0.8333 - (0.0347*std::sqrt(h));
+    int SA_ASR = ACOT(SF + TAN(ABS(DELTA - LAT)));
+    int SA_MAGHRIB = 3;
+    int SA_ISHA = 2;
 }
