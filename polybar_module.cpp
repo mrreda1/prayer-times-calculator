@@ -2,10 +2,24 @@
 #include "prayer.h"
 
 int main (void) {
-    int time_in_minutes, remaining, i;
+    // Variables
+    const int Shafii = 1, Hanafi = 2;
     std::string prayer_name, command;
     prayers* prayer;
-    PrayerApp app(+3, 23, 1, 29.8403, 31.2982, 19.5, 17.5);
+    int time_in_minutes, remaining, timezone, i;
+    double elevation_above_sea_level_in_meter,
+    latitude, longitude, fajr_angle, isha_angle;
+
+    // Parameters (custom)
+    timezone = +3;
+    elevation_above_sea_level_in_meter = 23;
+    latitude = 29.8403;
+    longitude = 31.2982;
+    fajr_angle = 19.5;
+    isha_angle = 17.5;
+
+    PrayerApp app(timezone, elevation_above_sea_level_in_meter,
+		  Shafii, latitude, longitude, fajr_angle, isha_angle);
 
     // BlackBox
     app.TimeSync();
@@ -37,7 +51,7 @@ int main (void) {
 
     // Send notification if it's prayer time
     command = "notify-send \"It's " + prayer_name + " time.\" -i ~/.config/polybar/mosque.png";
-    if(remaining == 0)
+    if(remaining == 1)
 	std::system(command.c_str());
 
     // Print remaining time for next prayer
