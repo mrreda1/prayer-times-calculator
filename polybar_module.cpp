@@ -10,6 +10,8 @@
 #define ACOS(x) (acos(x)) * 180/PI
 #define ABS(x) ((x < 0)?(-(x)):((x)))
 #define PI 3.141592653589793238462643383279502884197
+#define C_HA(x) ACOS((SIN(x) - SIN(LAT) \
+	     * SIN(DELTA)) / (COS(LAT) * COS(DELTA)))
 
 struct prayers {
     std::string name;
@@ -17,6 +19,7 @@ struct prayers {
 };
 
 int main (int argc, char *argv[]) {
+    // Variables
     double Y, M, D, H, m, s, B, A, Z, T, JD, U, L0, h, TT,
     ET1000, ET, DELTA, SF, LONG, LAT, FAJR_ANGLE, ISHA_ANGLE;
     H = 12, m = 0, s = 0;
@@ -64,7 +67,7 @@ int main (int argc, char *argv[]) {
     // Calculate transit time
     TT = 12 + Z - (LONG / 15) - (ET / 60);
 
-    
+    // Variables
     double SA_FAJR, SA_SUNRISE, SA_ASR, SA_MAGHRIB, SA_ISHA,
 	FAJR, SUNRISE, ZUHR, ASR, MAGHRIB, ISHA,
 	HA_FAJR, HA_SUNRISE, HA_ASR, HA_MAGHRIB, HA_ISHA;
@@ -77,10 +80,10 @@ int main (int argc, char *argv[]) {
     SA_ISHA = -(ISHA_ANGLE);
 
     // Calculate hour angle
-    HA_FAJR = ACOS((SIN(SA_FAJR) - SIN(LAT) * SIN(DELTA)) / (COS(LAT) * COS(DELTA)));
-    HA_SUNRISE = HA_MAGHRIB = ACOS((SIN(SA_SUNRISE) - SIN(LAT) * SIN(DELTA)) / (COS(LAT) * COS(DELTA)));
-    HA_ASR = ACOS((SIN(SA_ASR) - SIN(LAT) * SIN(DELTA)) / (COS(LAT) * COS(DELTA)));
-    HA_ISHA = ACOS((SIN(SA_ISHA) - SIN(LAT) * SIN(DELTA)) / (COS(LAT) * COS(DELTA)));
+    HA_FAJR = C_HA(SA_FAJR);
+    HA_SUNRISE = HA_MAGHRIB = C_HA(SA_SUNRISE);
+    HA_ASR = C_HA(SA_ASR);
+    HA_ISHA = C_HA(SA_ISHA);
 
     // Calculate prayer times
     FAJR    = (TT - HA_FAJR / 15) * 60;
@@ -90,13 +93,16 @@ int main (int argc, char *argv[]) {
     MAGHRIB = (TT + HA_MAGHRIB / 15) * 60;
     ISHA    = (TT + HA_ISHA / 15) * 60;
 
+    // Prayers' data
     prayers prayer[6] = {{"Fajr", (int)FAJR}, {"Sunrise", (int)SUNRISE},
 			 {"Zuhr", (int)ZUHR}, {"Asr", (int)ASR},
 			 {"Maghrib", (int)MAGHRIB}, {"Isha", (int)ISHA}};
 
+    // Get current time
     int time_in_minutes = current_time->tm_min + current_time->tm_hour * 60, remaining, i;
     std::string prayer_name, command;
 
+    // Find next prayer
     for(i = 0; i < 6; i++) {
 	if(prayer[i].time >= time_in_minutes) {
 	    remaining = prayer[i].time - time_in_minutes;
@@ -104,14 +110,18 @@ int main (int argc, char *argv[]) {
 	    break;
 	}
     }
+
+    // If after Isha time
     if(i == 6) {
 	remaining = prayer[0].time + 24 * 60 - time_in_minutes;
 	prayer_name = prayer[0].name;
     }
     command = "notify-send \"It's " + prayer_name + " time.\" -i ~/.config/polybar/mosque.png";
 
+    // Send notification if it's prayer time
     if(remaining == 0)
 	std::system(command.c_str());
 
+    // Print remaining time for next prayer
     printf("%0.2d:%0.2d", remaining/60, remaining%60);
 }
