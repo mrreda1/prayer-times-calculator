@@ -8,7 +8,7 @@
 #define TAN(x) tan((x) * PI/180)
 #define ACOT(x) (atan(1.0/(x))) * 180/PI
 #define ACOS(x) (acos(x)) * 180/PI
-#define ABS(x) ((x < 0)?(-(x)):((x)))
+#define ABS(x) ((x < 0)?(-(x)):(x))
 #define PI 3.141592653589793238462643383279502884197
 #define C_HA(x) ACOS((SIN(x) - SIN(LAT) \
 	     * SIN(DELTA)) / (COS(LAT) * COS(DELTA)))
@@ -18,17 +18,21 @@ struct prayers {
     int time;
 };
 
-int main (int argc, char *argv[]) {
-    // Variables
-    double Y, M, D, H, m, s, B, A, Z, T, JD, U, L0, h, TT,
-    ET1000, ET, DELTA, SF, LONG, LAT, FAJR_ANGLE, ISHA_ANGLE;
-    H = 12, m = 0, s = 0;
-    Z = +3, h = 23;
-    SF = 1;
-    LAT = 29.8403;
-    LONG = 31.2982;
-    FAJR_ANGLE = 19.5;
-    ISHA_ANGLE = 17.5;
+int main (void) {
+    // Data
+    double H, m, s, Z, h, SF, LAT, LONG, FAJR_ANGLE, ISHA_ANGLE;
+    H = 12, m = 0, s = 0; // Leave it as default (12:00:00)
+    Z = +3; // Timezone
+    h = 23; // Elevation above sea level in meter
+    SF = 1; // Shadow factor, Shafii: 1, Hanafi: 2
+    LAT = 29.8403, LONG = 31.2982; // Latitude and longitude
+    FAJR_ANGLE = 19.5, ISHA_ANGLE = 17.5; // Sun altitude
+
+    // BSS
+    double Y, M, D, B, A, T, JD, U, L0, TT,
+    ET1000, ET, DELTA, SA_FAJR, SA_SUNRISE, SA_ASR,
+    SA_MAGHRIB, SA_ISHA, FAJR, SUNRISE, ZUHR, ASR, MAGHRIB,
+    ISHA, HA_FAJR, HA_SUNRISE, HA_ASR, HA_MAGHRIB, HA_ISHA;
 
     // Time sync
     time_t ttime = time(0);
@@ -66,11 +70,6 @@ int main (int argc, char *argv[]) {
     
     // Calculate transit time
     TT = 12 + Z - (LONG / 15) - (ET / 60);
-
-    // Variables
-    double SA_FAJR, SA_SUNRISE, SA_ASR, SA_MAGHRIB, SA_ISHA,
-	FAJR, SUNRISE, ZUHR, ASR, MAGHRIB, ISHA,
-	HA_FAJR, HA_SUNRISE, HA_ASR, HA_MAGHRIB, HA_ISHA;
 
     // Calculate Sun altitude for each prayer times
     SA_FAJR = -(FAJR_ANGLE);
