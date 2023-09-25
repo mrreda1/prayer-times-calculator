@@ -36,10 +36,9 @@ private:
     prayers prayer[6];
 
 public:
-    PrayerApp(LF H, LF m, LF s, LF Z,
-	      LF h, LF SF, LF LAT, LF LONG,
+    PrayerApp(LF Z, LF h, LF SF, LF LAT, LF LONG,
 	      LF FAJR_ANGLE, LF ISHA_ANGLE) {
-	this->H = H, this->m = m, this->s = s;
+	H = 12, m = 0, s = 0;
 	this->Z = Z, this->h = h, this->SF = SF;
 	this->LAT = LAT, this->LONG = LONG;
 	this->FAJR_ANGLE = FAJR_ANGLE;

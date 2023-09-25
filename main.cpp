@@ -3,8 +3,7 @@
 
 int main (void) {
     prayers* prayer;
-    PrayerApp app(12, 0, 0, +3, 23, 1,
-		29.8403, 31.2982, 19.5, 17.5);
+    PrayerApp app(+3, 23, 1, 29.8403, 31.2982, 19.5, 17.5);
 
     // BlackBox
     app.TimeSync();
