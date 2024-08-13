@@ -1,5 +1,5 @@
 #include <iostream>
-#include "prayer.h"
+#include "prayer.hpp"
 
 int main (void) {
     // Variables
@@ -10,7 +10,7 @@ int main (void) {
     latitude, longitude, fajr_angle, isha_angle;
 
     // Parameters (custom)
-    timezone = +3;
+    timezone = +2;
     elevation_above_sea_level_in_meter = 23;
     latitude = 29.8403;
     longitude = 31.2982;

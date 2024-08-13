@@ -1,5 +1,5 @@
 #include <iostream>
-#include "prayer.h"
+#include "prayer.hpp"
 
 int main (void) {
     // Variables
